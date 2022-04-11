@@ -7,13 +7,20 @@ Abstract: We often take our right to free education in Canada for granted while 
 The repository contains three folders: inputs, outputs, and scripts which are organised as follows:
 
 Inputs: 
+  
   Data: the raw and cleaned data csv files obtained from The 1990/1991 Demographic and Health Survey In Pakistan
+
 Outputs:
+  
   Materials: Images used in the paper
   Paper: R Markdown, a final pdf document, and a bibliography
+
 Scripts:
+  
   01-data_cleaning.R: This script downloads, processes, and cleans the data obtained in the DHS final report
+
 To Generate the paper:
+  
   Download the repository's main folder
   Open Pakistan_HH_Education.Rproj in RStudio
   Install libraries using install.packages() and run webshot::install_phantomjs() in the console so the DAGs compile
