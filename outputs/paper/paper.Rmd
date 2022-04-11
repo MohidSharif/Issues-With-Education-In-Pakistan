@@ -1,5 +1,5 @@
 ---
-title: "The Key To Success"
+title: "Education: The Key To Success"
 subtitle: "Education Trends From The 1990/1991 Demographic and Health Survey In Pakistan"
 author: 
   - Mohid Sharif
