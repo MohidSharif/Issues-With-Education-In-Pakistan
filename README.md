@@ -13,6 +13,7 @@ Inputs:
 Outputs:
   
   Materials: Images used in the paper
+  
   Paper: R Markdown, a final pdf document, and a bibliography
 
 Scripts:
@@ -22,7 +23,11 @@ Scripts:
 To Generate the paper:
   
   Download the repository's main folder
+  
   Open Pakistan_HH_Education.Rproj in RStudio
+  
   Install libraries using install.packages() and run webshot::install_phantomjs() in the console so the DAGs compile
+  
   Run 01-data_cleaning.R to download the pdf report, obtain the cleaned and processed data set
+  
   Knit paper.Rmd to reproduce the paper
