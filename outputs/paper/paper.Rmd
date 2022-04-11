@@ -1,14 +1,18 @@
 ---
 title: "The Key To Success"
-subtitle: "Education Trends From The 1990/1991 Demographic and Health Survey"
+subtitle: "Education Trends From The 1990/1991 Demographic and Health Survey In Pakistan"
 author: 
   - Mohid Sharif
-thanks: "Code and data are available at: LINK."
+thanks: "Code and data are available at: https://github.com/MohidSharif/Issues-With-Education-In-Pakistan"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "We often take our right to free education in Canada for granted while people in third world countries have to pay for education and often times realize they can do without one. In this data study I obtained a National Family Health
+Survey from Pakistan, hosted by the Demographic and Health Surveys program in the US. I converted the education research table into a usable dataset which I analysed and visualized to observe changes in literacy rate over generations and provinces. In doing so I concluded that literacy rate in Pakistan has been on a steady incline but is rather slow, therefore there should be action taken to promote education for the development of the country."
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
 output:
   bookdown::pdf_document2
-toc: FALSE
+toc: True
 bibliography: references.bib
 ---
 
@@ -22,19 +26,30 @@ library(knitr)
 library(tidyverse)
 library(kableExtra)
 ```
+\newpage
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. For instance, Section \@ref(data). R Markdown automatically makes the sections lower case and adds a dash to spaces to generate labels, for instance, Section \@ref(first-discussion-point). 
+I grew up in Pakistan, I know first hand how difficult it is to get an education there. Low earning family opt to have their children work labor jobs over giving them an education. Education is not free in Pakistan, schools are privately owned and so having to pay for school when families are already earning pennies is very difficult. When I saw the Pakistan Demographic and Health survey I wanted to see how the literacy rate has changed over the years and if the country is doing something about their low literacy rate.
 
-```{r, warning=FALSE, echo=FALSE, fig.align="center", fig.cap="The Table in the NFHS Final Report", out.width = '95%'}
+I obtained the Demographic and Health survey and found a table about house hold education in Pakistan. I then had to understand how the table was recorded and organized. The table organized data by background characteristic which was separated into subgroups such as age groups, residence, and province. The table organized education for each background characteristic by education level; primary, middle, and secondary. The table also had records of the sample recorded for each characteristic. After I had an understanding of what data I had available to me I knew what I needed to do. I decided to create line graphs that would compare the generational literacy rate and calculate how fast literacy rate is increasing in Pakistan.
+
+Using my data to analyze how the literacy rate has changed over the last 55+ years I noticed that literacy rate is on a steady incline in Pakistan. The percent of people falling in the "no education" category have decreased by ~20% when comparing males of ages 65+ and 10-14. I also decided to see how each province fairs on its own in terms of literacy rate, my models showed me that Balochistan had the lowest literacy rate over a ~20% difference from the other provinces. Looking at these stats its very important that Pakistan put more effort into increasing the literacy rate in Balochistan and make education more accessible for future generations.
+
+```{r DHTables, warning=FALSE, echo=FALSE, fig.align="center", fig.cap="The Table Contained in the 1990/1991 Demographic and Health Survey", out.width = '95%'}
 include_graphics(here::here("/cloud/project/Issues-With-Education-In-Pakistan/outputs/materials/dh_surveymale.PNG"))
 include_graphics(here::here("/cloud/project/Issues-With-Education-In-Pakistan/outputs/materials/dh_surveyfemale.PNG"))
 ```
 
 # Data
 
-Our data is of penguins (Figure \@ref(fig:maleeducation)).
+I obtained my data from the **DHSProgram** [@citeNFHS] final report database, using the 'pdftools' package [@citepdftools] and the statistical programming language **R** [@citeR]. I used the **tidyverse** package for data cleaning and manipulation [@citetidyverse] and **kableExtra** for table formatting [@citekableExtra]. The header includes two lines of code **"usepackage{float}"** which allows the use of float in our R markdown and the line **"floatplacement{figure}{H}"** [@citeholdposition] which keeps the tables and figures locked in the specific place where they are written in R markdown.
+
+This data set contains the highest level of education achieved for every age group, residence and province. Education level is classified into four categories; no education, primary, middle, and secondary+. Age groups are organized from 5-9 to 65+ years of age, each age group being a group of 5 years. Residence is organized as either total urban, major city, other urban, or rural. Finally provinces are classified as Punjab, Sindh, NWFP, and Balochistan. 
+
+The data we are interested in is average level of education for each age group and average level of education for each province. I will look for any patterns that show progress in education in each age group. We also want to see if any province has lower literacy rate than expected and how this concerns the countries literacy rate. 
+
+(Tables \@ref(tab:maleeducation) and \@ref(tab:femaleeducation)) show the cleaned data organized by gender.
 
 ```{r maleeducation, echo= FALSE}
 # Read the data into a variable
@@ -47,7 +62,7 @@ male_education |>
 # Display the table with a caption and appropriate column names and format properties
   kable(
     caption = "Literacy Rate Data For Males",
-    col.names = c("Background Characteristic", "No Education", "Primary", "Middle", "Secondary"),
+    col.names = c("Background Characteristic", "No Education", "Primary", "Middle", "Secondary+"),
     digits = 1,
     booktabs = TRUE,
     linesep = "") |> 
@@ -64,7 +79,7 @@ female_education |>
 # Display the table with a caption and appropriate column names and format properties
   kable(
     caption = "Literacy Rate Data For Females",
-    col.names = c("Background Characteristic", "No Education", "Primary", "Middle", "Secondary"),
+    col.names = c("Background Characteristic", "No Education", "Primary", "Middle", "Secondary+"),
     digits = 1,
     booktabs = TRUE,
     linesep = "") |> 
@@ -73,9 +88,17 @@ female_education |>
 
 
 
-Talk more about it.
+We can observe that our values for each education level are organized in decimals, this represents the percentage of the population that completed this level of education. We want to ignore the first age group since ages of 5-9 would have no data available for education level above middle school. 
 
-Also bills and their average (Figure \@ref(fig:malegraph)). (Notice how you can change the height and width so they don't take the whole page?)
+We want to see how the literacy rate in Pakistan has changed over the years. To do this I will visualize my data on a line graph comparing the literacy rate for each age group. This way I can compare how much the literacy rate has changed for each age group and continue doing this for each education level.
+
+\newpage
+
+# Results
+
+I first filtered the unwanted rows, this included any rows that did not include age groups. From here I needed to graph one line for each education level, I graphed each line and associated it with a color, this way I could create a legend for all my lines. Now that I had my graph with lines for each education level, I labeled my X and Y axis and created my legend.
+
+(Figure \@ref(fig:malegraph)) shows the generational literacy rate comparison for each education level for men.
 
 ```{r malegraph, fig.cap="Male Generational Literacy Rate", echo = FALSE}
 
@@ -85,35 +108,51 @@ male_education |>
   geom_line(aes(y = No.Education, color = "No.Education"), color = "darkgreen")+
   geom_line(aes(y = Primary, color = "Primary"))+
   geom_line(aes(y = Middle, color = "Middle"))+
-  geom_line(aes(y = Secondary., color = "Secondary."), color = "darkblue")+
+  geom_line(aes(y = Secondary., color = "Secondary."), color = "darkorange")+
   theme_minimal()+
   labs(x = "Age Group",
-       y = "Education Rate",
+       y = "Population (Percentage)",
        color = "Education Indicator",
        caption = "Generational Literacy Rate Comparison") +
   scale_color_manual(name = "Education Indicator", values = c("None" = "darkgreen", "Primary" = "darkred", "Middle" = "darkblue", "Seconday+" = "darkorange"))+
   theme(legend.position = "bottom")
 ```
 
-```{r malegraphregional, fig.cap="Male Generational Literacy Rate", echo = FALSE}
+Our graph shows a steady decrease in percentage of people in the "no education" category, if we calculate this into rate of increase of literacy from the ages 10-14 to 65+ we can see how the rate of literacy in Pakistan is increasing every year. We can do this by first obtaining the values at our end points, our current "no education" rate for 10-14 years of age is 23.8% and for ages 65+ is 80.1%. From here we can take the difference and divide by the years passed. This would give us a 80.1-23.8 = 56.3, and we can divide this by the years passed which is 65-(10to15) = 50to55, dividing 56.3 by 50 and 55 we get an approximate 1.1% increase in education per year for the past 50-55 years in Pakistan.
 
+\newpage
+
+I now want to look at the difference in literacy rate in each province. For this I can just create a graph to visualize the percentage of the population in each province that falls under "no education". To do this I can first filter background characteristic so that I am only working with the provinces, from here I can plot the points for their values corresponding to each province.
+
+(Figure \@ref(fig:malegraphregional)) shows the statistics for each province vs no education rate.
+
+```{r malegraphregional, fig.cap="Male Regional Literacy Rate", echo= FALSE}
 male_education |>
   filter(Background.Characteristic == "Punjab" | Background.Characteristic == "Sindh" | Background.Characteristic == "NWFP" | Background.Characteristic == "Balochistan") |>
-  select(Background.Characteristic, No.Education) |>
   ggplot(mapping = aes(x=Background.Characteristic, y=No.Education)) +
   geom_point(color = "purple")+
   labs(x = "Province",
-       y = "Education Rate",
+       y = "No Education Rate",
        caption = "Literacy Rate Comparison Between Provinces")
+
 ```
 
-Talk way more about it. 
+From (Figure \@ref(fig:malegraphregional)) we see a drastic difference in literacy rate between Balochistan and the other provinces. Balochistan seems to have the lowest literacy rate in Pakistan while the other provinces are in ~7% range of each other. 
 
-# Results
+Balochistan has been known as the most neglected province in Pakistan despite being the largest and a resource-rich area. Blochistan has been going through a number of issues including terrorism, poverty, and illiteracy. Education is one of the major issues that plays an important role in the social and economic spheres of a country and Balochistan has been neglected for years [@citeBalochistan]. Balochistan also has one of the lowest number of educational institutes for women in the world. 
+
+\newpage
 
 # Discussion
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+Using our findings from above we can conclude that the key areas for improvement in Pakistan's literacy rate are Balochistan and overall increase in access to education. Though the overall literacy rate in Pakistan is on a steady incline it is still far too slow at a 1.1% per year. As the literacy rate reaches higher percentages the increase will become smaller and progress will be slowed again. Pakistan needs to make education more accessible, whether that be providing free education or making affordable education options available. Education is necessary for a country's progress and educating the general public about general knowledge is the key to eliminating corruption that has overrun the country for decades. 
+
+Rate of primary school education for ages 5-9 has peaked, doubling from prior age groups. This is a great sign for future education, since children attending primary school are more likely to continue their studies. Pakistan surprisingly has a higher population that is attending secondary+ education than middle school, this could be due to an interest in studies later in life, or maybe students are returning from abroad to study for their higher studies. I have personally seen this case from relatives that live abroad as its much easier to get into a medical school in Pakistan than in western countries. So families will come abroad to study up until the end of high school and then return to study in Pakistan past high school.
+
+Balochistan is a big area of worry with its extremely low literacy rate. Balochistan has one of the lowest rate of literacy for women in the world, sitting at over 88% illiteracy rate. This is one of the biggest problems that need to be resolved, but truth be told, Pakistan has been run by corrupt officials for decades. The officials in Pakistan care more about making money and their reputation than making a difference in their country. Progress is slow, people are uneducated and uneducated people are less likely to understand the issues regarding politics and the needs for social and economic change in the country.
+
+There isn't all bad news though. There are many well educated individuals in and outside the country that are trying to make a difference. People are studying abroad and taking their knowledge back to Pakistan and doing their best to educate the public. The public has become very hostile towards corruption and stand up to fight against it when they see it and this has been bringing the country on the incline over the years which we can see from our findings. In conclusion I think the future generation in Pakistan will be well educated and progress in the development in the country's social and economic sphere. Pakistan needs to make education affordable and provide education facilities in areas that are depraved of them. Balochistan is one of the main areas of concern that must be taken care of immediately, building small schools and providing education there would be a great way to start. I think in a 5-10 more years Pakistan can reach and even surpass the average literacy rate in the world. 
+
 
 \newpage
 
@@ -122,7 +161,137 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 # Appendix {-}
 
 
-# Additional details
+# Datasheet
+
+**Motivation**
+
+1. *For what purpose was the dataset created? Was there a specific task in mind? Was there a specific gap that needed to be filled? Please provide a description.*
+    - The dataset was created to strengthen the capabilities of the population research centres in Pakistan. 
+2. *Who created the dataset (for example, which team, research group) and on behalf of which entity (for example, company, institution, organization)?*
+    - The dataset was created by the National Institute of Population Studies alongside IRD/Macro International Inc.
+3. *Who funded the creation of the dataset? If there is an associated grant, please provide the name of the grantor and the grant name and number.*
+    - The creation was funded by the Government of Pakistan.
+4. *Any other comments?*
+    - None
+
+**Composition**
+
+1. *What do the instances that comprise the dataset represent (for example, documents, photos, people, countries)? Are there multiple types of instances (for example, movies, users, and ratings; people and interactions between them; nodes and edges)? Please provide a description.*
+	- The instances represent the background characteristic of the individials that were sampled, which were furthere classified into age groups, gender, area of residence, and province.
+2. *How many instances are there in total (of each type, if appropriate)?*
+	- There are 22 instances
+3. *Does the dataset contain all possible instances or is it a sample (not necessarily random) of instances from a larger set? If the dataset is a sample, then what is the larger set? Is the sample representative of the larger set (for example, geographic coverage)? If so, please describe how this representativeness was validated/verified. If it is not representative of the larger set, please describe why not (for example, to cover a more diverse range of instances, because instances were withheld or unavailable).*
+	- The dataset does contain all possible instances.
+4. *What data does each instance consist of? "Raw" data (for example, unprocessed text or images) or features? In either case, please provide a description.*
+	- Each instance consists of 9 values which are as the percentage of the instance that falls under each category, the categories include: no education, primary school, middle school, secondary+ school, missing, total, number of persons, median years, mean years.
+5. *Is there a label or target associated with each instance? If so, please provide a description.*
+	- The first column of each instance corresponds to the state it represents, which is the label associated with it.
+6. *Is any information missing from individual instances? If so, please provide a description, explaining why this information is missing (for example, because it was unavailable). This does not include intentionally removed information, but might include, for example, redacted text.*
+	- There is only 1 instance of missing information. In which case, the missing value is due to unavailable data. Namely, missing data due to ages 5-9 unable to attend middle school+
+7. *Are relationships between individual instances made explicit (for example, users' movie ratings, social network links)? If so, please describe how these relationships are made explicit.*
+	- There are no relationships between individual instances.
+8. *Are there recommended data splits (for example, training, development/validation, testing)? If so, please provide a description of these splits, explaining the rationale behind them.*
+	- There are no recommended data splits.
+9. *Are there any errors, sources of noise, or redundancies in the dataset? If so, please provide a description.*
+	- There are no errors, sources of noise, or redundancies in the dataset.
+10. *Is the dataset self-contained, or does it link to or otherwise rely on external resources (for example, websites, tweets, other datasets)? If it links to or relies on external resources, a) are there guarantees that they will exist, and remain constant, over time; b) are there official archival versions of the complete dataset (that is, including the external resources as they existed at the time the dataset was created); c) are there any restrictions (for example, licenses, fees) associated with any of the external resources that might apply to a dataset consumer? Please provide descriptions of all external resources and any restrictions associated with them, as well as links or other access points, as appropriate.*
+	- The dataset is self-contained.
+11. *Does the dataset contain data that might be considered confidential (for example, data that is protected by legal privilege or by doctor-patient confidentiality, data that includes the content of individuals' non-public communications)? If so, please provide a description.*
+	- There is no confidential data, and the dataset is publicly available.
+12. *Does the dataset contain data that, if viewed directly, might be offensive, insulting, threatening, or might otherwise cause anxiety? If so, please describe why.*
+	- Columns that might cause anxiety include: lack of education available to women, this is due to the fact that Pakistan is still a developing country and thus gender role stereotypes exist.
+13. *Does the dataset identify any sub-populations (for example, by age, gender)? If so, please describe how these subpopulations are identified and provide a description of their respective distributions within the dataset.*
+	- The dataset identifies sub-populations by age groups and gender. Male and female is data is completely seperated as the data is significantly different. Data for age groups is due to the availability of education for certain age groups. 
+14. *Is it possible to identify individuals (that is, one or more natural persons), either directly or indirectly (that is, in combination with other data) from the dataset? If so, please describe how.*
+	- It is not possible to identify individuals in any way.
+15. *Does the dataset contain data that might be considered sensitive in any way (for example, data that reveals race or ethnic origins, sexual orientations, religious beliefs, political opinions or union memberships, or locations; financial or health data; biometric or genetic data; forms of government identification, such as social security numbers; criminal history)? If so, please provide a description.*
+	- None.
+16. *Any other comments?*
+	- None.
+
+**Collection process**
+
+1. *How was the data associated with each instance acquired? Was the data directly observable (for example, raw text, movie ratings), reported by subjects (for example, survey responses), or indirectly inferred/derived from other data (for example, part-of-speech tags, model-based guesses for age or language)? If the data was reported by subjects or indirectly inferred/derived from other data, was the data validated/verified? If so, please describe how.*
+	- The data associated was collected with the help of the Institute of Population studies in Islamabad, Pakistan. The data was collected through field work from all provinces.
+2. *What mechanisms or procedures were used to collect the data (for example, hardware apparatuses or sensors, manual human curation, software programs, software APIs)? How were these mechanisms or procedures validated?*
+	- Manual human curation.
+3. *If the dataset is a sample from a larger set, what was the sampling strategy (for example, deterministic, probabilistic with specific sampling probabilities)?*
+	-Geographic stratification subdivided each state into regions, from which villages were further stratified
+4. *Who was involved in the data collection process (for example, students, crowdworkers, contractors) and how were they compensated (for example, how much were crowdworkers paid)?*
+	- The operations were supervised by the senior field staff of each region. Compensation data is not available.
+5. *Over what timeframe was the data collected? Does this timeframe match the creation timeframe of the data associated with the instances (for example, recent crawl of old news articles)? If not, please describe the timeframe in which the data associated with the instances was created.*
+	- The data was collected over December 1990 and May 1991.
+6. *Were any ethical review processes conducted (for example, by an institutional review board)? If so, please provide a description of these review processes, including the outcomes, as well as a link or other access point to any supporting documentation.*
+	- Ethical review processes were not conducted.
+7. *Did you collect the data from the individuals in question directly, or obtain it via third parties or other sources (for example, websites)?*
+	- Data was obtained from Demographic and Health Surveys website: dhsprogram.com
+8. *Were the individuals in question notified about the data collection? If so, please describe (or show with screenshots or other information) how notice was provided, and provide a link or other access point to, or otherwise reproduce, the exact language of the notification itself.*
+	- The individuals voluntarily interviewed with data collectors. The notice of data collection is not available.
+9. *Did the individuals in question consent to the collection and use of their data? If so, please describe (or show with screenshots or other information) how consent was requested and provided, and provide a link or other access point to, or otherwise reproduce, the exact language to which the individuals consented.*
+	- The individuals consented to the collection and use of their data. The exact language in which consent was granted is not available.
+10. *If consent was obtained, were the consenting individuals provided with a mechanism to revoke their consent in the future or for certain uses? If so, please provide a description, as well as a link or other access point to the mechanism (if appropriate).*
+	- A mechanism to revoke consent was not provided.
+11. *Has an analysis of the potential impact of the dataset and its use on data subjects (for example, a data protection impact analysis) been conducted? If so, please provide a description of this analysis, including the outcomes, as well as a link or other access point to any supporting documentation.*
+	- An analysis of the potential impact of the dataset and its use on data subjects was not conducted.
+12. *Any other comments?*
+	- None
+
+**Preprocessing/cleaning/labeling**
+
+1. *Was any preprocessing/cleaning/labeling of the data done (for example, discretization or bucketing, tokenization, part-of-speech tagging, SIFT feature extraction, removal of instances, processing of missing values)? If so, please provide a description. If not, you may skip the remaining questions in this section.*
+	- The data was originally obtained in PDF format. The table from the survey PDF was converted to a usable data frame in R using the pdftools library in R.
+2. *Was the "raw" data saved in addition to the preprocessed/cleaned/labeled data (for example, to support unanticipated future uses)? If so, please provide a link or other access point to the "raw" data.*
+	- The raw data obtained from the PDF is saved in inputs/data/raw_data.csv
+3. *Is the software that was used to preprocess/clean/label the data available? If so, please provide a link or other access point.*
+	- R Software is avalaible at https://www.R-project.org/
+4. *Any other comments?*
+	- None
+
+**Uses**
+
+1. *Has the dataset been used for any tasks already? If so, please provide a description.*
+	- No it has not.
+2. *Is there a repository that links to any or all papers or systems that use the dataset? If so, please provide a link or other access point.*
+	- https://github.com/MohidSharif/Issues-With-Education-In-Pakistan
+3. *What (other) tasks could the dataset be used for?*
+	- The dataset can be used for examining the state of households, women and children in Pakistan in 1990/1991.
+4. *Is there anything about the composition of the dataset or the way it was collected and preprocessed/cleaned/labeled that might impact future uses? For example, is there anything that a dataset consumer might need to know to avoid uses that could result in unfair treatment of individuals or groups (for example, stereotyping, quality of service issues) or other risks or harms (for example, legal risks, financial harms)? If so, please provide a description. Is there anything a dataset consumer could do to mitigate these risks or harms?*
+	- The cleaning process is very specific to the way this table was formatted in the original PDF and may not work on other tables. 
+5. *Are there tasks for which the dataset should not be used? If so, please provide a description.*
+	- None
+
+**Distribution**
+
+1. *Will the dataset be distributed to third parties outside of the entity (for example, company, institution, organization) on behalf of which the dataset was created? If so, please provide a description.*
+	- No.
+2. *How will the dataset be distributed (for example, tarball on website, API, GitHub)? Does the dataset have a digital object identifier (DOI)?*
+	- The dataset will be distributed using Github.
+3. *When will the dataset be distributed?*
+	- The dataset will be distributed in April 2022.
+4. *Will the dataset be distributed under a copyright or other intellectual property (IP) license, and/or under applicable terms of use (ToU)? If so, please describe this license and/ or ToU, and provide a link or other access point to, or otherwise reproduce, any relevant licensing terms or ToU, as well as any fees associated with these restrictions.*
+	- The dataset will be released under the MIT license
+5. *Have any third parties imposed IP-based or other restrictions on the data associated with the instances? If so, please describe these restrictions, and provide a link or other access point to, or otherwise reproduce, any relevant licensing terms, as well as any fees associated with these restrictions.*
+	- There are no restrictions
+6. *Do any export controls or other regulatory restrictions apply to the dataset or to individual instances? If so, please describe these restrictions, and provide a link or other access point to, or otherwise reproduce, any supporting documentation.*
+	- No such controls or restrictions are applicable.
+7. *Any other comments?*
+
+**Maintenance**
+
+1. *Who will be supporting/hosting/maintaining the dataset?*
+	- Mohid Sharif
+2. *How can the owner/curator/manager of the dataset be contacted (for example, email address)?*
+	- Can be contacted via github
+3. *Is there an erratum? If so, please provide a link or other access point.*
+	- There is no erratum available currently.
+4. *Will the dataset be updated (for example, to correct labeling errors, add new instances, delete instances)? If so, please describe how often, by whom, and how updates will be communicated to dataset consumers (for example, mailing list, GitHub)?*
+	- Currently there is no plan of updating the dataset.
+5. *If the dataset relates to people, are there applicable limits on the retention of the data associated with the instances (for example, were the individuals in question told that their data would be retained for a fixed period of time and then deleted)? If so, please describe these limits and explain how they will be enforced.*
+	- The dataset was made via survey findings conducted in Pakistan. There are no applicable limits as the people took part voluntarily.
+6. *Will older versions of the dataset continue to be supported/hosted/maintained? If so, please describe how. If not, please describe how its obsolescence will be communicated to dataset consumers.*
+	- The older versions would not be hosted. Data may be updated which can be checked through the commit history on github.
+7. *If others want to extend/augment/build on/contribute to the dataset, is there a mechanism for them to do so? If so, please provide a description. Will these contributions be validated/verified? If so, please describe how. If not, why not? Is there a process for communicating/distributing these contributions to dataset consumers? If so, please provide a description.*
+	- There is no way currently for people to contribute on the dataset
 
 
 \newpage
@@ -131,3 +300,4 @@ If my paper were 10 pages, then should be be at least 2.5 pages. The discussion 
 # References
 
 
+@citeggplot2, @citepdftools, @citetidyverse, @citeknitr, @citeExample
