@@ -1,4 +1,4 @@
-# starter_folder
+# Issues-With-Education-In-Pakistan
 
 This paper contains the R project used in creating the paper "The Key to Success: Education Trends From The 1990/1991 Demographic and Health Survey In Pakistan".
 
